@@ -2,15 +2,8 @@
 #include common_scripts\utility;
 #include maps\_zombiemode_utility;
 
-#using_animtree( "generic_human" );
-
 init()
 {
-	precachemodel( "bo1_c_viet_zombie_napalm_m" );
-	precachemodel( "bo1_c_viet_zombie_nva1_body_m" );
-	precachemodel( "bo1_c_viet_zombie_nva_body_alt_m" );
-	precachemodel( "bo1_c_viet_zombie_vc_grunt_m" );
-
 	precachemodel( "char_ger_honorgd_bodyz1_1_m" );
 	precachemodel( "char_ger_honorgd_bodyz1_2_m" );
 	precachemodel( "char_ger_honorgd_bodyz2_1_m" );
