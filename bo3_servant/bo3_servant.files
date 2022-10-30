@@ -1,0 +1,11 @@
+images\$identitynormalmap.iwi
+images\mtl_zmb_zod_idg_ammo.iwi
+images\mtl_zmb_zod_idg_body_c.iwi
+images\mtl_zmb_zod_idg_bone_c.iwi
+images\mtl_zmb_zod_idg_eyes_c.iwi
+images\mtl_zmb_zod_idg_pap.iwi
+images\mtl_zmb_zod_idg_sacks_c.iwi
+images\mtl_zmb_zod_idg_tentacles_c.iwi
+scripts\sp\_zombiemode_weap_servant.gsc
+weapons\sp\servant
+weapons\sp\servant_upgraded

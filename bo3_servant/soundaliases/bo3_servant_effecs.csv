@@ -1,0 +1,9 @@
+name,sequence,file,limit_count,limit_type,vol_min,vol_max,pitch_min,pitch_max,dist_min,dist_max,dist_reverb_max,volumefalloffcurve,reverb_falloff_curve,bus,priority,spatialized,type,probability,loop,masterslave,loadspec,reverb_falloff_curve,subtitle,compression,randomize_type,secondaryaliasname,chainaliasname,startdelay,speakermap,reverb_send,lfe percentage,center percentage,platform,envelop_min,envelop_max,envelop percentage,occlusion_level,min_priority,max_priority,min_priority_threshold,max_priority_threshold,real_delay,distance_lpf,move_type,move_time,,,,
+
+crush_end_00,,servant/crush_end/crush_end_00.wav,1,priority,1,1,0.95,1.1,100,800,,curve3,,full_vol,,3d,,,,,,,,,,,,,,,,,,50,100,1,0.1,5,25,0.25,0.75,,,,,,,,
+crush_end_01,,servant/crush_end/crush_end_01.wav,1,priority,1,1,0.95,1.1,100,800,,curve3,,full_vol,,3d,,,,,,,,,,,,,,,,,,50,100,1,0.1,5,25,0.25,0.75,,,,,,,,
+
+servant_portal_loop,,servant/servant_portal_loop.wav,1,priority,1,1,0.95,1.1,100,800,,curve3,,full_vol,,3d,,,looping,,,,,,,,,,,,,,,50,100,1,0.1,5,25,0.25,0.75,,,,,,,,
+servant_portal_start,,servant/servant_portal_start.wav,1,priority,1,1,0.95,1.1,100,800,,curve3,,full_vol,,3d,,,,,,,,,,,,,,,,,,50,100,1,0.1,5,25,0.25,0.75,,,,,,,,
+servant_portal_end,,servant/servant_portal_end.wav,1,priority,1,1,0.95,1.1,100,800,,curve3,,full_vol,,3d,,,,,,,,,,,,,,,,,,50,100,1,0.1,5,25,0.25,0.75,,,,,,,,
+

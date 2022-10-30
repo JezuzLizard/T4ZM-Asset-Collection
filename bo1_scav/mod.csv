@@ -1,0 +1,8 @@
+weapon,sp\zm_scavenger
+weapon,sp\zm_scavenger_upgraded
+sound,bo1_scavenger,,all_sp
+fx,scavenger\scavenger_blood
+fx,scavenger\scavenger_ex
+fx,scavenger\scavenger_ex_ug
+material,hud_indicator_sniper_explosive
+rawfile,vision\infared_vision.vision

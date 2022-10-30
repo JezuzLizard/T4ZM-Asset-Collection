@@ -1,0 +1,11 @@
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.iwi filter=lfs diff=lfs merge=lfs -text
+
+*/xmodel/* filter=lfs diff=lfs merge=lfs -text
+*/xmodelsurfs/* filter=lfs diff=lfs merge=lfs -text
+*/xmodelpieces/* filter=lfs diff=lfs merge=lfs -text
+*/xmodelparts/* filter=lfs diff=lfs merge=lfs -text
+*/xanim/* filter=lfs diff=lfs merge=lfs -text
+*/materials/* filter=lfs diff=lfs merge=lfs -text
+*/material_properties/* filter=lfs diff=lfs merge=lfs -text
+*/fonts/* filter=lfs diff=lfs merge=lfs -text

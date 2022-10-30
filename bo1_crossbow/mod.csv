@@ -1,0 +1,8 @@
+weapon,sp\zm_crossbow
+weapon,sp\zm_crossbow_upgraded
+sound,bo1_crossbow,,all_sp
+fx,crossbow\crossbow_explosion
+fx,crossbow\crossbow_green
+fx,crossbow\crossbow_red
+fx,crossbow\fx_crossbow_explosion
+material,hud_crossbow_indicator

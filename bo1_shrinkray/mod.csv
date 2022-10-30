@@ -1,0 +1,10 @@
+weapon,sp\zombie_shrinkray
+weapon,sp\zombie_shrinkray_upgraded
+fx,baby_gun\babygun_shrink
+fx,baby_gun\babygun_impact
+sound,bo1_skrink_ray,,all_sp
+sound,bo1_skrink_ray_zmb,,all_sp
+xmodel,char_ger_honorgd_bodyz1_1_m
+xmodel,char_ger_honorgd_bodyz1_2_m
+xmodel,char_ger_honorgd_bodyz2_1_m
+xmodel,char_ger_honorgd_bodyz2_2_m
