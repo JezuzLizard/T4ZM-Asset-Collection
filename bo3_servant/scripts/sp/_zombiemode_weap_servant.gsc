@@ -6,11 +6,15 @@
 
 init()
 {
-	precacheItem( "servant" );
-	precacheItem( "servant_upgraded" );
-
 	level._effect["servant_portal"]	= loadfx( "servant/servant_hole" );
 	level._effect["servant_implode"] = loadfx( "servant/servant_implode" );
+
+	include_weapon( "servant" );
+	include_weapon( "servant_upgraded", false );
+	maps\_zombiemode_weapons::add_zombie_weapon( "servant", "Press & Hold &&1 To Buy Servant [Cost: 2000]", 		2000,	"vox_panzer",	5 );
+	maps\_zombiemode_weapons::add_zombie_weapon( "servant_upgraded", "Press & Hold &&1 To Buy Servant [Cost: 2000]", 		2000,	"vox_panzer",	5 );
+
+	maps\_zombiemode_weapons::add_limited_weapon( "servant", 1 );
 
 	level thread serv_on_player_connect();
 

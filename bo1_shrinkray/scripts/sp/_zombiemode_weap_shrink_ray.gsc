@@ -9,11 +9,16 @@ init()
 	precachemodel( "char_ger_honorgd_bodyz2_1_m" );
 	precachemodel( "char_ger_honorgd_bodyz2_2_m" );
 
-	precacheItem( "zombie_shrinkray" );
-	precacheItem( "zombie_shrinkray_upgraded" );
-
 	level._effect[ "shrink" ]							= loadfx( "baby_gun/babygun_impact" );
 	level._effect[ "unshrink" ]							= loadfx( "baby_gun/babygun_shrink" );
+
+	include_weapon( "zombie_shrinkray" );
+	include_weapon( "zombie_shrinkray_upgraded", false );
+	maps\_zombiemode_weapons::add_zombie_weapon( "zombie_shrinkray", "Press & Hold &&1 To Buy Shrinkray [Cost: 2000]", 		2000,	"vox_panzer",	5 );
+	maps\_zombiemode_weapons::add_zombie_weapon( "zombie_shrinkray_upgraded", "Press & Hold &&1 To Buy Shrinkray [Cost: 2000]", 		2000,	"vox_panzer",	5 );
+
+	maps\_zombiemode_weapons::add_limited_weapon( "zombie_shrinkray", 1 );
+
 
 	set_zombie_var( "shrink_ray_cylinder_radius",		60 );
 	set_zombie_var( "shrink_ray_cylinder_radius_upgraded",		84 );
