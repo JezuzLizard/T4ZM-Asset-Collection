@@ -53,3 +53,10 @@ xanim,ai_zombie_blackhole_crawl_fast_v1
 weapon,sp\an94
 weapon,sp\an94_upgraded
 sound,ndu_an94,,all_sp
+xanim,ai_hazmat_sprint
+xanim,ai_zombie_base_supersprint_bo4_v1
+xanim,ai_zombie_base_supersprint_bo4_v2
+xanim,ai_zombie_base_supersprint_tranzit_fair_v1
+xanim,ai_zombie_fast_sprint_01
+xanim,ai_zombie_fast_sprint_02
+xanim,ai_zombie_sprint_v12

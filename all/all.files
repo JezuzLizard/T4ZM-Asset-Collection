@@ -52,6 +52,7 @@ images\t5_weapon_shrinkray_n.iwi
 images\t5_weapon_zsniper_n.iwi
 images\Thumbs.db
 maps\nazi_zombie_factory.gsc
+scripts\sp\_zombiemode_supersprinters.gsc
 scripts\sp\_zombiemode_weap_an94.gsc
 scripts\sp\_zombiemode_weap_crossbow.gsc
 scripts\sp\_zombiemode_weap_galil.gsc
