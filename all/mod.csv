@@ -6,12 +6,10 @@ fx,crossbow\crossbow_green
 fx,crossbow\crossbow_red
 fx,crossbow\fx_crossbow_explosion
 material,hud_crossbow_indicator
-
 weapon,sp\zm_galil
 weapon,sp\zm_galil_upgraded
 sound,bo1_galil,,all_sp
 sound,bo1_pap,,all_sp
-
 weapon,sp\zm_scavenger
 weapon,sp\zm_scavenger_upgraded
 sound,bo1_scavenger,,all_sp
@@ -20,7 +18,6 @@ fx,scavenger\scavenger_ex
 fx,scavenger\scavenger_ex_ug
 material,hud_indicator_sniper_explosive
 rawfile,vision\infared_vision.vision
-
 weapon,sp\zombie_shrinkray
 weapon,sp\zombie_shrinkray_upgraded
 fx,baby_gun\babygun_shrink
@@ -31,7 +28,6 @@ xmodel,char_ger_honorgd_bodyz1_1_m
 xmodel,char_ger_honorgd_bodyz1_2_m
 xmodel,char_ger_honorgd_bodyz2_1_m
 xmodel,char_ger_honorgd_bodyz2_2_m
-
 weapon,sp\servant
 weapon,sp\servant_upgraded
 rawfile,animtrees\generic_human.atr
@@ -54,3 +50,13 @@ xanim,vm_zod_id_gun_sprint_out_v2
 xanim,ai_zombie_blackhole_walk_fast_v1
 xanim,ai_zombie_quad_blackhole_crawl_fast_v1
 xanim,ai_zombie_blackhole_crawl_fast_v1
+weapon,sp\an94
+weapon,sp\an94_upgraded
+sound,ndu_an94,,all_sp
+xanim,ai_hazmat_sprint
+xanim,ai_zombie_base_supersprint_bo4_v1
+xanim,ai_zombie_base_supersprint_bo4_v2
+xanim,ai_zombie_base_supersprint_tranzit_fair_v1
+xanim,ai_zombie_fast_sprint_01
+xanim,ai_zombie_fast_sprint_02
+xanim,ai_zombie_sprint_v12

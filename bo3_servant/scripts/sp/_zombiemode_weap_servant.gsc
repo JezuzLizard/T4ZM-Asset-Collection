@@ -6,11 +6,15 @@
 
 init()
 {
-	precacheItem( "servant" );
-	precacheItem( "servant_upgraded" );
-
 	level._effect["servant_portal"]	= loadfx( "servant/servant_hole" );
 	level._effect["servant_implode"] = loadfx( "servant/servant_implode" );
+
+	include_weapon( "servant" );
+	include_weapon( "servant_upgraded", false );
+	maps\_zombiemode_weapons::add_zombie_weapon( "servant", "Press & Hold &&1 To Buy Servant [Cost: 2000]", 		2000,	"vox_panzer",	5 );
+	maps\_zombiemode_weapons::add_zombie_weapon( "servant_upgraded", "Press & Hold &&1 To Buy Servant [Cost: 2000]", 		2000,	"vox_panzer",	5 );
+
+	maps\_zombiemode_weapons::add_limited_weapon( "servant", 1 );
 
 	level thread serv_on_player_connect();
 
@@ -21,9 +25,9 @@ init()
 	set_zombie_var( "servant_time",			7 );
 	set_zombie_var( "servant_time_ug",		12 );
 
-	level._zombie_servant_death["zombie"] 			= %ai_zombie_blackhole_walk_fast_v1;
-	level._zombie_servant_death["quad_zombie"] 	= %ai_zombie_quad_blackhole_crawl_fast_v1;
-	level._zombie_servant_crawl_death["zombie"] 		= %ai_zombie_blackhole_crawl_fast_v1;
+	level._zombie_servant_death["zombie"] 			= % ai_zombie_blackhole_walk_fast_v1;
+	level._zombie_servant_death["quad_zombie"] 	= % ai_zombie_quad_blackhole_crawl_fast_v1;
+	level._zombie_servant_crawl_death["zombie"] 		= % ai_zombie_blackhole_crawl_fast_v1;
 }
 
 serv_on_player_connect()
@@ -80,6 +84,7 @@ servant_explode( point, up )
 servant_portal( time, player, up )
 {
 	radius = level.zombie_vars[ "servant_radius" ];
+
 	if ( up )
 		radius = level.zombie_vars[ "servant_radius_ug" ];
 
@@ -95,10 +100,10 @@ servant_portal( time, player, up )
 		{
 			for ( i = 0; i < zombies.size; i++ )
 			{
-				if (isDefined(zombies[i].magic_bullet_shield) && zombies[i].magic_bullet_shield)
+				if ( isDefined( zombies[i].magic_bullet_shield ) && zombies[i].magic_bullet_shield )
 					continue;
 
-				if ( !isDefined(zombies[i].in_servant) || !zombies[i].in_servant )
+				if ( !isDefined( zombies[i].in_servant ) || !zombies[i].in_servant )
 				{
 					zombies[i].in_servant = true;
 					zombies[i] thread servant_damage( player, self );
@@ -115,6 +120,7 @@ servant_portal( time, player, up )
 
 
 	radius = level.zombie_vars[ "servant_radius_explode" ];
+
 	if ( up )
 		radius = level.zombie_vars[ "servant_radius_explode_ug" ];
 
@@ -122,7 +128,7 @@ servant_portal( time, player, up )
 
 	for ( i = 0; i < zombies.size; i++ )
 	{
-		if (isDefined(zombies[i].magic_bullet_shield) && zombies[i].magic_bullet_shield)
+		if ( isDefined( zombies[i].magic_bullet_shield ) && zombies[i].magic_bullet_shield )
 			continue;
 
 		playfx( level._effect["dog_gib"], zombies[i].origin );
@@ -148,7 +154,7 @@ servant_damage( player, portal )
 	self dodamage( self.health + 666, self.origin, player );
 	self hide();
 
-	if (self.animname == "zombie_dog")
+	if ( self.animname == "zombie_dog" )
 	{
 		playfx( level._effect["dog_gib"], self.origin );
 		return;

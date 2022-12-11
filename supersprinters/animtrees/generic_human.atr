@@ -12,10 +12,14 @@
 
 body
 {
-	// bo3 servant zombie anims
-	ai_zombie_blackhole_crawl_fast_v1
-	ai_zombie_blackhole_walk_fast_v1
-	ai_zombie_quad_blackhole_crawl_fast_v1
+	// fast zopmbie sprint anims
+	ai_hazmat_sprint
+	ai_zombie_base_supersprint_bo4_v1
+	ai_zombie_base_supersprint_bo4_v2
+	ai_zombie_base_supersprint_tranzit_fair_v1
+	ai_zombie_fast_sprint_01
+	ai_zombie_fast_sprint_02
+	ai_zombie_sprint_v12
 
 	rope_test
 
