@@ -1,5 +1,6 @@
 *.wav filter=lfs diff=lfs merge=lfs -text
 *.iwi filter=lfs diff=lfs merge=lfs -text
+*.flac filter=lfs diff=lfs merge=lfs -text
 
 */xmodel/* filter=lfs diff=lfs merge=lfs -text
 */xmodelsurfs/* filter=lfs diff=lfs merge=lfs -text

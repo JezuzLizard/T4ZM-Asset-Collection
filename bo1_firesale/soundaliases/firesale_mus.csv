@@ -1,0 +1,3 @@
+name,file,loadspec,vol_min,vol_max,team_vol_mod,dist_min,dist_max,dist_reverb_max,reverb_falloff_curve,volume_min_falloff_curve,reverb_min_falloff_curve,limit_count,limit_type,entity_limit_count,entity_limit_type,pitch_min,pitch_max,team_pitch_mod,min_priority,max_priority,min_priority_threshold,max_priority_threshold,spatialized,type,loop,randomize_type,probability,reverb_send,envelop_min,envelop_max,occlusion_level,occlusion_wet_dry,distance_lpf,move_type,move_time,real_delay,subtitle,mature,doppler,compression,bus
+#Base fire sound lines,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+mus_fire_sale,mus\zombie\firesale\mus_CHAP205_19.wav,zombie_mus_shared,1.0,1.0,,50,2250,6500,log2,,,10,priority,,,,,,90,95,0.5,1,,,looping,,,1.0,50,350,0.2,,,,,,,,,,
