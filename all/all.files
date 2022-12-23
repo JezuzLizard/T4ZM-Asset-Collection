@@ -9,6 +9,12 @@ images\_-gt5_weapon_scope_rail_ak47_c.iwi
 images\_-gt5_weapon_shrinkray_c.iwi
 images\_-gt5_weapon_shrinkray_dragon_c.iwi
 images\_-gt5_weapon_zsniper_c.iwi
+images\~~~-gglobal_window_glass_s-rg~3f12ae3d.iwi
+images\~~~-gzombie_vending_three_gun~96c61552.iwi
+images\~~~-gzombie_vending_three_gun~e927766e.iwi
+images\~-gglobal_window_glass_c.iwi
+images\~-gzombie_vending_three_gun_c.iwi
+images\~-gzombie_vending_three_gun_logo_c.iwi
 images\~mtl_an94_reflex_lens_spc-rgb~aedebf0f.iwi
 images\~t5_crossbow_spc-rgb&t5_cross~066145af.iwi
 images\~t5_scavenger_weapon_acog_len~933c02fd.iwi
@@ -21,6 +27,8 @@ images\~t5_weapon_zsniper_spc-rgb&t5~d8a89caf.iwi
 images\bo1_red_dot_reflexsight4.iwi
 images\crossbow_explosive_arrow_n.iwi
 images\fg42_chalk_c.iwi
+images\global_normal_flat_16x16.iwi
+images\global_window_glass_n.iwi
 images\hud_crossbow_indicator.iwi
 images\hud_indicator_sniper_explosive.iwi
 images\mtl_an94_bullet_col.iwi
@@ -41,6 +49,7 @@ images\mtl_zmb_zod_idg_sacks_c.iwi
 images\mtl_zmb_zod_idg_tentacles_c.iwi
 images\scope_overlay_l96a1_1024.iwi
 images\scope_overlay_scavenger.iwi
+images\specialty_three_guns_zombies.iwi
 images\t5_crossbow_n.iwi
 images\t5_scavenger_weapon_acog_lens_n.iwi
 images\t5_weapon_galil_n.iwi
@@ -51,7 +60,6 @@ images\t5_weapon_shrinkray_dragon_n.iwi
 images\t5_weapon_shrinkray_n.iwi
 images\t5_weapon_zsniper_n.iwi
 images\Thumbs.db
-maps\nazi_zombie_factory.gsc
 scripts\sp\_zombiemode_supersprinters.gsc
 scripts\sp\_zombiemode_weap_an94.gsc
 scripts\sp\_zombiemode_weap_crossbow.gsc
@@ -59,6 +67,7 @@ scripts\sp\_zombiemode_weap_galil.gsc
 scripts\sp\_zombiemode_weap_scavenger.gsc
 scripts\sp\_zombiemode_weap_servant.gsc
 scripts\sp\_zombiemode_weap_shrink_ray.gsc
+scripts\test.gsc
 weapons\sp\an94
 weapons\sp\an94_upgraded
 weapons\sp\servant

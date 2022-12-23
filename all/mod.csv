@@ -60,3 +60,5 @@ xanim,ai_zombie_base_supersprint_tranzit_fair_v1
 xanim,ai_zombie_fast_sprint_01
 xanim,ai_zombie_fast_sprint_02
 xanim,ai_zombie_sprint_v12
+xmodel,zombie_vending_three_gun
+material,specialty_three_guns_zombies
