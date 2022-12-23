@@ -38,8 +38,8 @@ setup_callbacks()
 {
 	wait 0.25;
 
-	level.shrinkrayoldoverridedamage = level.overridePlayerDamage;
-	level.overridePlayerDamage = ::shrink_ray_melee_damage_reduction;
+	level.shrinkrayoldoverridedamage = level.callbackPlayerDamage;
+	level.callbackPlayerDamage = ::shrink_ray_melee_damage_reduction;
 
 	level.callbackActorDamageShrinkPrev = level.callbackActorDamage;
 	level.callbackActorDamage = ::callbackActorDamageShrink;
@@ -184,7 +184,11 @@ shrink_zombie( player, upgraded )
 
 	if ( level.zombie_vars["zombie_insta_kill"] )
 	{
-		self DoDamage( self.health + 666, player.origin, player );
+		if ( isDefined( player ) )
+			self DoDamage( self.health + 666, player.origin, player );
+		else
+			self DoDamage( self.health + 666, player.origin );
+
 		return;
 	}
 
@@ -297,7 +301,10 @@ shrink_zombie( player, upgraded )
 
 			wait( 0.1 );
 
-			self DoDamage( self.health + 666, player.origin, player );
+			if ( isDefined( player ) )
+				self DoDamage( self.health + 666, player.origin, player );
+			else
+				self DoDamage( self.health + 666, player.origin );
 		}
 		else
 		{
@@ -314,7 +321,11 @@ shrink_zombie( player, upgraded )
 
 			self StartRagdoll();
 			self LaunchRagdoll( fling_vec );
-			self DoDamage( self.health + 666, player.origin, player );
+
+			if ( isDefined( player ) )
+				self DoDamage( self.health + 666, player.origin, player );
+			else
+				self DoDamage( self.health + 666, player.origin );
 		}
 	}
 }
@@ -410,8 +421,14 @@ kicked_death( killer )
 	self launchragdoll( launchDir * launchForce );
 	wait_network_frame();
 
+	if ( !isDefined( self ) )
+		return;
+
 	// Make sure they're dead...physics launch didn't kill them.
-	self dodamage( self.health + 666, self.origin, killer );
+	if ( isDefined( killer ) )
+		self dodamage( self.health + 666, self.origin, killer );
+	else
+		self dodamage( self.health + 666, self.origin );
 }
 
 kicked_vox_network_choke()
@@ -446,8 +463,16 @@ shrink_death( killer )
 	self setContents( 0 );
 	self thread maps\_zombiemode_spawner::zombie_eye_glow_stop();
 	wait_network_frame();
+
+	if ( !isDefined( self ) )
+		return;
+
 	self Hide();
-	self dodamage( self.health + 666, self.origin, killer );
+
+	if ( isDefined( killer ) )
+		self dodamage( self.health + 666, self.origin, killer );
+	else
+		self dodamage( self.health + 666, self.origin );
 }
 
 watch_for_death()

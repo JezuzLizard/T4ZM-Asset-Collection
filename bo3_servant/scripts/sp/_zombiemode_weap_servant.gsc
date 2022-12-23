@@ -100,6 +100,9 @@ servant_portal( time, player, up )
 		{
 			for ( i = 0; i < zombies.size; i++ )
 			{
+				if ( !isDefined( zombies[i] ) )
+					continue;
+
 				if ( isDefined( zombies[i].magic_bullet_shield ) && zombies[i].magic_bullet_shield )
 					continue;
 
@@ -128,17 +131,29 @@ servant_portal( time, player, up )
 
 	for ( i = 0; i < zombies.size; i++ )
 	{
+		if ( !isDefined( zombies[i] ) )
+			continue;
+
 		if ( isDefined( zombies[i].magic_bullet_shield ) && zombies[i].magic_bullet_shield )
 			continue;
 
-		playfx( level._effect["dog_gib"], zombies[i].origin );
+		zombies[i] maps\_zombiemode_spawner::zombie_eye_glow_stop();
 		zombies[i] hide();
-		zombies[i] dodamage( zombies[i].health + 666, zombies[i].origin, player );
+
+		playfx( level._effect["dog_gib"], zombies[i].origin );
+
+		if ( isDefined( player ) )
+			zombies[i] dodamage( zombies[i].health + 666, zombies[i].origin, player );
+		else
+			zombies[i] dodamage( zombies[i].health + 666, zombies[i].origin );
 	}
 }
 
 servant_damage( player, portal )
 {
+	if ( !isDefined( self ) )
+		return;
+
 	servant_anim = undefined;
 
 	if ( self.has_legs )
@@ -151,8 +166,12 @@ servant_damage( player, portal )
 	hatModel = self.hatModel;
 
 	self maps\_zombiemode_spawner::zombie_eye_glow_stop();
-	self dodamage( self.health + 666, self.origin, player );
 	self hide();
+
+	if ( isDefined( player ) )
+		self dodamage( self.health + 666, self.origin, player );
+	else
+		self dodamage( self.health + 666, self.origin );
 
 	if ( self.animname == "zombie_dog" )
 	{
@@ -175,6 +194,9 @@ servant_damage( player, portal )
 
 	zombie MoveTo( portal.origin, 1 );
 	//zombie RotateRoll( (2 * 1500 + 3 * Randomfloat( 2500 )) * -1, 5, 0, 0 );
+
+	if ( !isDefined( zombie ) )
+		return;
 
 	zombie waittill( "movedone" );
 	playsoundatposition( "crush_end_0" + randomint( 2 ), zombie.origin );

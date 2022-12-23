@@ -237,7 +237,10 @@ sniper_explode( point, upgraded, weaponName )
 		explode_orig += ( 0, 0, 10 );
 	}
 
-	model RadiusDamage( explode_orig, radius, sniper_damage( upgraded ), sniper_damage_min( upgraded ), self, "MOD_GRENADE_SPLASH", weaponName );
+	if ( isDefined( self ) )
+		model RadiusDamage( explode_orig, radius, sniper_damage( upgraded ), sniper_damage_min( upgraded ), self, "MOD_GRENADE_SPLASH", weaponName );
+	else
+		model RadiusDamage( explode_orig, radius, sniper_damage( upgraded ), sniper_damage_min( upgraded ), undefined, "MOD_GRENADE_SPLASH", weaponName );
 
 	// delete
 	model delete ();

@@ -282,7 +282,10 @@ crossbow_think( shooter, upgraded, weaponName )
 		explode_orig += ( 0, 0, 10 );
 	}
 
-	model RadiusDamage( explode_orig, radius, crossbow_damage( upgraded ), crossbow_damage_min( upgraded ), shooter, "MOD_GRENADE_SPLASH", weaponName );
+	if ( isDefined( shooter ) )
+		model RadiusDamage( explode_orig, radius, crossbow_damage( upgraded ), crossbow_damage_min( upgraded ), shooter, "MOD_GRENADE_SPLASH", weaponName );
+	else
+		model RadiusDamage( explode_orig, radius, crossbow_damage( upgraded ), crossbow_damage_min( upgraded ), undefined, "MOD_GRENADE_SPLASH", weaponName );
 
 	// delete
 	model delete ();
