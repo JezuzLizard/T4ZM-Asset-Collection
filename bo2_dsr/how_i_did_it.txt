@@ -1,0 +1,51 @@
+using greyhound; we need to dump the stuff from t6
+in-game settings; load xmodels and load xanims
+model settings; use global, export images with models, export all lods, NO export images into material folders, export semodel and export maya
+anim settings; export direct xanims waw compat (xd)
+gdt settings; save a legacy gdt (xd!!)
+
+load in black ops 2 zm town surv;
+filter 'dsr'
+select all BUT crawl, d2p, vzoom
+export selected and close
+
+
+maya time! we need attach the clip model to the weapon model for both view and world
+using SETools and Call of Duty Tools,  TheEnbyWitch/CoDMayaTools and DTZxPorter
+drag in the view model's LOD0 semodel and bind file
+drag in the view model's clip LOD0 semodel and bind file
+expand the Joints (ang j_gun) and Joints1, middlemouse drag tag_clip to the bottom of j_gun
+expand the both LOD0s, middlemouse drag all the clip's meshes to the bottom of the gun's
+select the tag_clip, hit W, and move the clip to that it fits the gun
+delete the mesh that houses the clantag stuff t6 has, its not used in t4
+
+im going to add the scope too, same process as attaching the clip
+
+now to export!
+highlight both the joints and the LOD0, then select at the top bar and then Heirarchy
+hit Call of Duty tools at the top, xport xmodel, save to and export selected
+
+do the same for world model...
+
+we now got the xmodel_export
+
+
+now we need to convert the assets
+using greyhounds gdt export, move and rename it; into the source_data folder
+move the _images folder into model_export, move the xmodel_export for view and world u create too into model_export too
+open assman; open the gdt u moved
+
+select xmodel, delete the unused entries
+make sure to update the filename for the view model to the xmodel_export u made
+and the world model, remove the lods, all dists to 0 except the highlod dist, make it 1000
+update the filename for world too
+
+go to materials, you need to find missing filenames for the color maps of the materials, everything should be in the _images folder
+
+now convert all the materials!! we will have the gun in waw model format!!
+
+
+
+we can just use the greyhound waw modtools anims, so just move the files (not seanim files) inside ur greyhound dump xanims folder into your raw xanims folder, done!!
+
+for pap model, you could copy the xmodel_export and modify it to '_pap' or something to the materials, and create these materials in assman

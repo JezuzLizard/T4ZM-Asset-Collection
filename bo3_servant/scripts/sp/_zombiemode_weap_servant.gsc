@@ -131,7 +131,7 @@ servant_portal( time, player, up )
 
 	for ( i = 0; i < zombies.size; i++ )
 	{
-		if ( !isDefined( zombies[i] ) )
+		if ( !isDefined( zombies[i] ) || !isAlive( zombies[i] ) )
 			continue;
 
 		if ( isDefined( zombies[i].magic_bullet_shield ) && zombies[i].magic_bullet_shield )
@@ -151,7 +151,9 @@ servant_portal( time, player, up )
 
 servant_damage( player, portal )
 {
-	if ( !isDefined( self ) )
+	wait (RandomInt(5) * 0.05);
+
+	if ( !isDefined( self ) || !isAlive( self ) )
 		return;
 
 	servant_anim = undefined;

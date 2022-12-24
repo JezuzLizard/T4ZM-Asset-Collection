@@ -62,3 +62,6 @@ xanim,ai_zombie_fast_sprint_02
 xanim,ai_zombie_sprint_v12
 xmodel,zombie_vending_three_gun
 material,specialty_three_guns_zombies
+weapon,sp\zombie_dsr50
+weapon,sp\zombie_dsr50_upgraded
+sound,bo2_dsr,,all_sp
