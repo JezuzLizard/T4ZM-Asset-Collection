@@ -140,7 +140,7 @@ bump_trig()
 		//Store sound to play in script_sound/ alias name
 		if(IsDefined (self.script_sound) && self.script_activated)
 		{	
-			self playsound (self.script_sound);
+			playsoundatposition(self.script_sound, self.origin);
 //		iprintlnbold(self.script_sound);
 		}
 		while(IsDefined (who) && (who) IsTouching (self))
