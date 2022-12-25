@@ -111,6 +111,8 @@ init_mulekick(origin, angles)
 	trig.targetname = "audio_bump_trigger";
 	trig.script_sound = "perks_rattle";
 
+	trig thread maps\_audio::thread_bump_trigger();
+
 	models = [];
 	models[0] = model;
 	level thread turn_mule_on(models);
@@ -927,15 +929,6 @@ vending_trigger_think()
 			if ( cheat != true )
 			{
 				//player iprintln( "Already using Perk: " + perk );
-
-				if (self.classname == "trigger_use" || GetTime() - last_time > 500)
-				{
-					last_time = GetTime();
-					playsoundatposition("deny", self.origin);
-				}
-				//player thread play_no_money_perk_dialog();
-
-
 				continue;
 			}
 		}
