@@ -1002,12 +1002,12 @@ iwfx 2
 	flags spawnRelative spawnFrustumCull spawnOffsetNone runRelToEffect;
 	spawnRange 0 5000;
 	fadeInRange 0 0;
-	fadeOutRange 0 0;
+	fadeOutRange 1 0;
 	spawnFrustumCullRadius 450;
 	spawnLooping 950 1;
 	spawnOneShot 950 1;
-	spawnDelayMsec 0 100;
-	lifeSpanMsec 1000 500;
+	spawnDelayMsec 50 100;
+	lifeSpanMsec 250 300;
 	spawnOrgX -0 0;
 	spawnOrgY -0 0;
 	spawnOrgZ 0 0;
@@ -1096,7 +1096,7 @@ iwfx 2
 			1 0
 		}
 	};
-	rotGraph 0
+	rotGraph 1
 	{
 		{
 			0 0.5
@@ -1107,11 +1107,17 @@ iwfx 2
 			1 0
 		}
 	};
-	sizeGraph0 140
+	sizeGraph0 1250
 	{
 		{
-			0 1
-			1 0
+			0 0
+			0.0647059 0.506494
+			0.114706 0.701299
+			0.173529 0.818182
+			0.276471 0.928571
+			0.320588 0.961039
+			0.382353 0.993506
+			1 1
 		}
 		{
 			0 0
@@ -1155,7 +1161,10 @@ iwfx 2
 	{
 		{
 			0 1
-			1 1
+			0.936047 1
+			0.973837 0.717703
+			0.997093 0.330144
+			1 0
 		}
 		{
 			0 1

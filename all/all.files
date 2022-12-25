@@ -9,11 +9,13 @@ images\_-gt5_weapon_scope_rail_ak47_c.iwi
 images\_-gt5_weapon_shrinkray_c.iwi
 images\_-gt5_weapon_shrinkray_dragon_c.iwi
 images\_-gt5_weapon_zsniper_c.iwi
+images\~~$white-rgb&~-rzombie_perkbo~7206468c.iwi
 images\~~~-gglobal_window_glass_s-rg~3f12ae3d.iwi
 images\~~~-gmtl_t6_attach_bullet_spc~c29655f0.iwi
 images\~~~-gmtl_t6_attach_tritium_wh~17f916ae.iwi
 images\~~~-gmtl_t6_wpn_sniper_dsr50_~0183b7ef.iwi
 images\~~~-gmtl_t6_wpn_sniper_dsr50_~e08d2c0b.iwi
+images\~~~-gzombie_perkbottle_jugg_o~221a62f8.iwi
 images\~~~-gzombie_vending_three_gun~96c61552.iwi
 images\~~~-gzombie_vending_three_gun~e927766e.iwi
 images\~camo_packapunch_spec-rgb&$white-l-11.iwi
@@ -24,6 +26,9 @@ images\~-gmtl_t6_attach_tritium_wht_col.iwi
 images\~-gmtl_t6_wpn_sniper_dsr50_col.iwi
 images\~-gmtl_t6_wpn_sniper_dsr50_sc~00b86bbd.iwi
 images\~-gmtl_t6_wpn_sniper_dsr50_scope_col.iwi
+images\~-gzombie_perkbottle_three_gun_c.iwi
+images\~-gzombie_perkbottle_three_gun_in_c.iwi
+images\~-gzombie_perkbottle_three_gun_out_c.iwi
 images\~-gzombie_vending_three_gun_c.iwi
 images\~-gzombie_vending_three_gun_logo_c.iwi
 images\~mtl_an94_reflex_lens_spc-rgb~aedebf0f.iwi
@@ -87,7 +92,9 @@ images\t5_weapon_shrinkray_n.iwi
 images\t5_weapon_zsniper_n.iwi
 images\Thumbs.db
 images\viewmodel_usa_raiderwatch_c.iwi
-scripts\sp\_zombie_perk_three_guns.gsc
+images\zombie_perkbottle_jugg_out_n.iwi
+images\zombie_vending_three_gun_logo_c.iwi
+maps\_zombiemode_perks.gsc
 scripts\sp\_zombiemode_supersprinters.gsc
 scripts\sp\_zombiemode_weap_an94.gsc
 scripts\sp\_zombiemode_weap_crossbow.gsc
@@ -108,5 +115,6 @@ weapons\sp\zm_scavenger
 weapons\sp\zm_scavenger_upgraded
 weapons\sp\zombie_dsr50
 weapons\sp\zombie_dsr50_upgraded
+weapons\sp\zombie_perk_bottle_mule
 weapons\sp\zombie_shrinkray
 weapons\sp\zombie_shrinkray_upgraded

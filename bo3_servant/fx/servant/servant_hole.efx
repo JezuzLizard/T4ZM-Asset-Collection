@@ -955,7 +955,7 @@ iwfx 2
 			1 -0.5
 		}
 	};
-	sizeGraph0 180
+	sizeGraph0 300
 	{
 		{
 			0 0.383117
@@ -1475,7 +1475,7 @@ iwfx 2
 			1 0.1698
 		}
 	};
-	sizeGraph0 300
+	sizeGraph0 750
 	{
 		{
 			0 0.3734
