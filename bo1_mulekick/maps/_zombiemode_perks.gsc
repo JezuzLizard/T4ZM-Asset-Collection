@@ -157,6 +157,9 @@ watch_guns()
 			cur_weap = player GetCurrentWeapon();
 			for ( i = 0; i < primaryWeapons.size; i++ )
 			{
+				if ("mine_bouncing_betty" == primaryWeapons[i] )
+					continue;
+
 				if ( is_weapon_included( primaryWeapons[i] ) || maps\_zombiemode_weapons::is_weapon_upgraded( primaryWeapons[i] ) )
 				{
 					primary_weapons_that_can_be_taken[primary_weapons_that_can_be_taken.size] = primaryWeapons[i];
