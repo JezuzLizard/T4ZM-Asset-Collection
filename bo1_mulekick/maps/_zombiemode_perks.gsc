@@ -1024,8 +1024,8 @@ give_player_perk(player, perk)
 	player endon("disconnect");
 
 	// do the drink animation
-	gun = player perk_give_bottle_begin( perk );
 	player.is_drinking = 1;
+	gun = player perk_give_bottle_begin( perk );
 	player waittill_any( "fake_death", "death", "player_downed", "weapon_change_complete" );
 
 	// restore player controls and movement
