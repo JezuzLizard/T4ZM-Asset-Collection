@@ -110,8 +110,9 @@ init_mulekick(origin, angles)
 	trig.script_noteworthy = "specialty_extraammo";
 	trig.targetname = "audio_bump_trigger";
 	trig.script_sound = "perks_rattle";
+	trig.script_activated = 1;
 
-	trig thread maps\_audio::thread_bump_trigger();
+	trig thread bump_trig();
 
 	models = [];
 	models[0] = model;
@@ -125,6 +126,28 @@ init_mulekick(origin, angles)
 	thread watch_guns();
 
 	return trig;
+}
+
+bump_trig()
+{
+	while(1)
+	{
+
+		self waittill("trigger", who);
+				
+//		iprintlnbold("Triggered:");
+
+		//Store sound to play in script_sound/ alias name
+		if(IsDefined (self.script_sound) && self.script_activated)
+		{	
+			self playsound (self.script_sound);
+//		iprintlnbold(self.script_sound);
+		}
+		while(IsDefined (who) && (who) IsTouching (self))
+		{
+			wait(0.1);
+		}		
+	}
 }
 
 is_weapon_included( weapon_name )
@@ -914,6 +937,11 @@ vending_trigger_think()
 		}
 
 		if( player GetCurrentWeapon() == "mine_bouncing_betty" )
+		{
+			continue;
+		}
+
+		if (isDefined(player.is_drinking) && player.is_drinking)
 		{
 			continue;
 		}
