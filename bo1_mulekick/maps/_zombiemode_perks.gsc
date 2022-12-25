@@ -68,6 +68,8 @@ init()
 	set_zombie_var( "zombie_perk_cost",					2000 );
 	set_zombie_var( "zombie_perk_juggernaut_health",	160 );
 
+	vending_triggers[vending_triggers.size] = level init_mulekick(( -1089, -1366, 67 ), ( 0, 90, 0 ));
+
 	// this map uses atleast 1 perk machine
 	array_thread( vending_triggers, ::vending_trigger_think );
 	array_thread( vending_triggers, :: electric_perks_dialog);
@@ -87,6 +89,296 @@ init()
 	level.jugger_jingle = 0;
 	level.packa_jingle = 0;
 
+}
+
+init_mulekick(origin, angles)
+{
+	PrecacheModel( "zombie_vending_three_gun" );
+	PrecacheModel( "zombie_vending_three_gun_on" );
+	PrecacheShader( "specialty_three_guns_zombies" );
+	PrecacheItem( "zombie_perk_bottle_mule" );
+	level._effect[ "additionalprimaryweapon_light" ] = loadfx( "misc/fx_zombie_cola_arsenal_on" );
+
+	model = spawn( "script_model", origin );
+	model.angles = angles;
+	model SetModel( "zombie_vending_three_gun" );
+	model.script_sound = "mx_mule_kick_jingle";
+
+	col = spawncollision( "collision_geo_32x32x128", "collider", model.origin - ( 0, 0, -64 ), model.angles );
+
+	trig = Spawn( "trigger_radius", model.origin + ( 0, 0, 30 ), 0, 20, 70 );
+	trig.script_noteworthy = "specialty_extraammo";
+
+	models = [];
+	models[0] = model;
+	level thread turn_mule_on(models);
+
+	// make mulekick work!
+	replaceFunc(maps\_zombiemode_weapons::weapon_give, ::weapon_give_func);
+	replaceFunc(maps\_zombiemode_weapons::treasure_chest_give_weapon, ::treasure_chest_give_weapon_func);
+
+	// watch guns
+	thread watch_guns();
+
+	return trig;
+}
+
+is_weapon_included( weapon_name )
+{
+	if( !IsDefined( level.zombie_weapons ) )
+	{
+		return false;
+	}
+
+	return IsDefined( level.zombie_weapons[weapon_name] );
+}
+
+watch_guns()
+{
+	for (;;)
+	{
+		wait 0.05;
+
+		players = get_players();
+		for (h = 0; h < players.size; h++)
+		{
+			player = players[h];
+
+			count = 2;
+			if (player hasperk("specialty_extraammo"))
+				count++;
+
+			primary_weapons_that_can_be_taken = [];
+			primaryWeapons = player GetWeaponsListPrimaries();
+			cur_weap = player GetCurrentWeapon();
+			for ( i = 0; i < primaryWeapons.size; i++ )
+			{
+				if ( is_weapon_included( primaryWeapons[i] ) || maps\_zombiemode_weapons::is_weapon_upgraded( primaryWeapons[i] ) )
+				{
+					primary_weapons_that_can_be_taken[primary_weapons_that_can_be_taken.size] = primaryWeapons[i];
+				}
+			}
+
+			if ( primary_weapons_that_can_be_taken.size > count )
+			{
+				weapon_to_take = primary_weapons_that_can_be_taken[primary_weapons_that_can_be_taken.size - 1];
+				if ( weapon_to_take == cur_weap )
+				{
+					player SwitchToWeapon( primary_weapons_that_can_be_taken[0] );
+				}
+				player TakeWeapon( weapon_to_take );
+			}
+		}
+	}
+}
+
+treasure_chest_give_weapon_func( weapon_string )
+{
+	primaryWeapons = self GetWeaponsListPrimaries();
+	current_weapon = undefined;
+
+	if( self HasWeapon( weapon_string ) )
+	{
+		self GiveMaxAmmo( weapon_string );
+		self SwitchToWeapon( weapon_string );
+		return;
+	}
+
+	count = 2;
+	if (self hasperk("specialty_extraammo"))
+		count++;
+
+	// This should never be true for the first time.
+	if( primaryWeapons.size >= count ) // he has two weapons
+	{
+		current_weapon = self getCurrentWeapon(); // get hiss current weapon
+
+		if ( current_weapon == "mine_bouncing_betty" )
+		{
+			current_weapon = undefined;
+		}
+
+		if( isdefined( current_weapon ) )
+		{
+			if( !( weapon_string == "fraggrenade" || weapon_string == "stielhandgranate" || weapon_string == "molotov" || weapon_string == "zombie_cymbal_monkey" ) )
+			{
+				// PI_CHANGE_BEGIN
+				// JMA - player dropped the tesla gun
+				if( isDefined(level.script) && (level.script == "nazi_zombie_sumpf" || level.script == "nazi_zombie_factory") )
+				{
+					if( current_weapon == "tesla_gun" )
+					{
+						level.player_drops_tesla_gun = true;
+					}
+				}
+				// PI_CHANGE_END
+
+				self TakeWeapon( current_weapon );
+		}
+	}
+	}
+
+	if( IsDefined( primaryWeapons ) && !isDefined( current_weapon ) )
+	{
+		for( i = 0; i < primaryWeapons.size; i++ )
+		{
+			if( primaryWeapons[i] == "zombie_colt" )
+			{
+				continue;
+			}
+
+			if( weapon_string != "fraggrenade" && weapon_string != "stielhandgranate" && weapon_string != "molotov" && weapon_string != "zombie_cymbal_monkey" )
+			{
+				// PI_CHANGE_BEGIN
+				// JMA - player dropped the tesla gun
+				if( isDefined(level.script) && (level.script == "nazi_zombie_sumpf" || level.script == "nazi_zombie_factory") )
+				{
+					if( primaryWeapons[i] == "tesla_gun" )
+					{
+						level.player_drops_tesla_gun = true;
+					}
+				}
+				// PI_CHANGE_END
+
+				self TakeWeapon( primaryWeapons[i] );
+			}
+		}
+	}
+
+	self play_sound_on_ent( "purchase" );
+
+	if( weapon_string == "molotov" || weapon_string == "molotov_zombie" )
+	{
+		// PI_CHANGE_BEGIN
+		// JMA 051409 sanity check to see if we have the weapon before we remove it
+		has_weapon = self HasWeapon( "zombie_cymbal_monkey" );
+		if( isDefined(has_weapon) && has_weapon )
+		{
+			self TakeWeapon( "zombie_cymbal_monkey" );
+		}
+		// PI_CHANGE_END
+	}
+	if( weapon_string == "zombie_cymbal_monkey" )
+	{
+		// PI_CHANGE_BEGIN
+		// JMA 051409 sanity check to see if we have the weapon before we remove it
+		has_weapon = self HasWeapon( "molotov" );
+		if( isDefined(has_weapon) && has_weapon )
+		{
+			self TakeWeapon( "molotov" );
+		}
+
+		if( isDefined(level.zombie_weapons) && isDefined(level.zombie_weapons["molotov_zombie"]) )
+		{
+			has_weapon = self HasWeapon( "molotov_zombie" );
+			if( isDefined(has_weapon) && has_weapon )
+			{
+				self TakeWeapon( "molotov_zombie" );
+			}
+		}
+		// PI_CHANGE_END
+
+		self maps\_zombiemode_cymbal_monkey::player_give_cymbal_monkey();
+		maps\_zombiemode_weapons::play_weapon_vo(weapon_string);
+		return;
+	}
+
+	self GiveWeapon( weapon_string, 0 );
+	self GiveMaxAmmo( weapon_string );
+	self SwitchToWeapon( weapon_string );
+
+	maps\_zombiemode_weapons::play_weapon_vo(weapon_string);
+
+	// self playsound (level.zombie_weapons[weapon_string].sound);
+}
+
+weapon_give_func( weapon, is_upgrade )
+{
+	primaryWeapons = self GetWeaponsListPrimaries();
+	current_weapon = undefined;
+
+	//if is not an upgraded perk purchase
+	if( !IsDefined( is_upgrade ) )
+	{
+		is_upgrade = false;
+	}
+
+	count = 2;
+	if (self hasperk("specialty_extraammo"))
+		count++;
+
+	// This should never be true for the first time.
+	if( primaryWeapons.size >= count ) // he has two weapons
+	{
+		current_weapon = self getCurrentWeapon(); // get his current weapon
+
+		if ( current_weapon == "mine_bouncing_betty" )
+		{
+			current_weapon = undefined;
+		}
+
+		if( isdefined( current_weapon ) )
+		{
+			if( !( weapon == "fraggrenade" || weapon == "stielhandgranate" || weapon == "molotov" || weapon == "zombie_cymbal_monkey" ) )
+			{
+				self TakeWeapon( current_weapon );
+			}
+		}
+	}
+
+	if( weapon == "zombie_cymbal_monkey" )
+	{
+		// PI_CHANGE_BEGIN
+		// JMA 051409 sanity check to see if we have the weapon before we remove it
+		has_weapon = self HasWeapon( "molotov" );
+		if( isDefined(has_weapon) && has_weapon )
+		{
+			self TakeWeapon( "molotov" );
+		}
+
+		if( isDefined(level.zombie_weapons) && isDefined(level.zombie_weapons["molotov_zombie"]) )
+		{
+			has_weapon = self HasWeapon( "molotov_zombie" );
+			if( isDefined(has_weapon) && has_weapon )
+			{
+				self TakeWeapon( "molotov_zombie" );
+			}
+		}
+		// PI_CHANGE_END
+
+		self maps\_zombiemode_cymbal_monkey::player_give_cymbal_monkey();
+		maps\_zombiemode_weapons::play_weapon_vo( weapon );
+		return;
+	}
+	if( (weapon == "molotov" || weapon == "molotov_zombie") )
+	{
+			self TakeWeapon( "zombie_cymbal_monkey" );
+	}
+
+	self play_sound_on_ent( "purchase" );
+	self GiveWeapon( weapon, 0 );
+	self GiveMaxAmmo( weapon );
+	self SwitchToWeapon( weapon );
+
+	maps\_zombiemode_weapons::play_weapon_vo(weapon);
+}
+
+turn_mule_on(machine)
+{
+	level waittill("sleight_on");
+	level notify("mule_on");
+
+	for( i = 0; i < machine.size; i++ )
+	{
+		machine[i] setmodel("zombie_vending_three_gun_on");
+		machine[i] vibrate((0,-100,0), 0.3, 0.4, 3);
+		playsoundatposition("perks_power_on", machine[i].origin);
+		machine[i] thread perk_fx( "additionalprimaryweapon_light" );
+
+		machine[i] thread perks_a_cola_jingle();
+	}
+
+	level notify( "specialty_extraammo_power_on" );
 }
 
 third_person_weapon_upgrade( current_weapon, origin, angles, packa_rollers, perk_machine )
@@ -255,7 +547,12 @@ wait_for_player_to_take( player, weapon, packa_timer )
 			{
 				self notify( "pap_taken" );
 				primaries = player GetWeaponsListPrimaries();
-				if( isDefined( primaries ) && primaries.size >= 2 )
+
+				count = 2;
+				if (player hasperk("specialty_extraammo"))
+					count++;
+
+				if( isDefined( primaries ) && primaries.size >= count )
 				{
 					player maps\_zombiemode_weapons::weapon_give( weapon+"_upgraded" );
 				}
@@ -551,6 +848,14 @@ vending_trigger_think()
 	for( ;; )
 	{
 		self waittill( "trigger", player );
+
+		// normally, radiant perk triggers are trigger_use, trigger_radius perks are spawned via script
+		if (self.classname == "trigger_radius")
+		{
+			if (!player UseButtonPressed())
+				continue;
+		}
+
 		index = maps\_zombiemode_weapons::get_player_index(player);
 
 		cost = level.zombie_vars["zombie_perk_cost"];
@@ -570,6 +875,10 @@ vending_trigger_think()
 
 		case "specialty_rof":
 			cost = 2000;
+			break;
+
+		case "specialty_extraammo":
+			cost = 4000;
 			break;
 
 		}
@@ -610,8 +919,8 @@ vending_trigger_think()
 			if ( cheat != true )
 			{
 				//player iprintln( "Already using Perk: " + perk );
-				self playsound("deny");
-				player thread play_no_money_perk_dialog();
+				playsoundatposition("deny", self.origin);
+				//player thread play_no_money_perk_dialog();
 
 
 				continue;
@@ -621,7 +930,7 @@ vending_trigger_think()
 		if ( player.score < cost )
 		{
 			//player iprintln( "Not enough points to buy Perk: " + perk );
-			self playsound("deny");
+			playsoundatposition("deny", self.origin);
 			player thread play_no_money_perk_dialog();
 			continue;
 		}
@@ -649,6 +958,10 @@ vending_trigger_think()
 			sound = "mx_doubletap_sting";
 			break;
 
+		case "specialty_extraammo":
+			sound = "mx_mule_kick_sting";
+			break;
+
 		default:
 			sound = "mx_jugger_sting";
 			break;
@@ -659,47 +972,53 @@ vending_trigger_think()
 		//		self waittill("sound_done");
 
 
-		// do the drink animation
-		gun = player perk_give_bottle_begin( perk );
-		player.is_drinking = 1;
-		player waittill_any( "fake_death", "death", "player_downed", "weapon_change_complete" );
-
-		// restore player controls and movement
-		player perk_give_bottle_end( gun, perk );
-		player.is_drinking = undefined;
-		// TODO: race condition?
-		if ( player maps\_laststand::player_is_in_laststand() )
-		{
-			continue;
-		}
-
-		player SetPerk( perk );
-		player thread perk_vo(perk);
-		player setblur( 4, 0.1 );
-		wait(0.1);
-		player setblur(0, 0.1);
-		//earthquake (0.4, 0.2, self.origin, 100);
-		if(perk == "specialty_armorvest")
-		{
-			player.maxhealth = level.zombie_vars["zombie_perk_juggernaut_health"];
-			player.health = level.zombie_vars["zombie_perk_juggernaut_health"];
-			//player.health = 160;
-		}
-
-
-		player perk_hud_create( perk );
-
-		//stat tracking
-		player.stats["perks"]++;
-
-		//player iprintln( "Bought Perk: " + perk );
-		bbPrint( "zombie_uses: playername %s playerscore %d round %d cost %d name %s x %f y %f z %f type perk",
-			player.playername, player.score, level.round_number, cost, perk, self.origin );
-
-		player thread perk_think( perk );
+		thread give_player_perk(player, perk);
 
 	}
 }
+
+give_player_perk(player, perk)
+{
+	player endon("disconnect");
+
+	// do the drink animation
+	gun = player perk_give_bottle_begin( perk );
+	player.is_drinking = 1;
+	player waittill_any( "fake_death", "death", "player_downed", "weapon_change_complete" );
+
+	// restore player controls and movement
+	player perk_give_bottle_end( gun, perk );
+	player.is_drinking = undefined;
+	// TODO: race condition?
+	if ( player maps\_laststand::player_is_in_laststand() )
+	{
+		return;
+	}
+
+	player SetPerk( perk );
+	player thread perk_vo(perk);
+	player setblur( 4, 0.1 );
+	wait(0.1);
+	player setblur(0, 0.1);
+	//earthquake (0.4, 0.2, self.origin, 100);
+	if(perk == "specialty_armorvest")
+	{
+		player.maxhealth = level.zombie_vars["zombie_perk_juggernaut_health"];
+		player.health = level.zombie_vars["zombie_perk_juggernaut_health"];
+		//player.health = 160;
+	}
+
+
+	player perk_hud_create( perk );
+
+	//stat tracking
+	player.stats["perks"]++;
+
+	//player iprintln( "Bought Perk: " + perk );
+
+	player thread perk_think( perk );
+}
+
 play_no_money_perk_dialog()
 {
 
@@ -798,6 +1117,10 @@ vending_set_hintstring( perk )
 		self SetHintString( &"ZOMBIE_PERK_DOUBLETAP" );
 		break;
 
+	case "specialty_extraammo":
+		self SetHintString( "Press and hold &&1 to buy Mule Kick [Cost: 4000]" );
+		break;
+
 	default:
 		self SetHintString( perk + " Cost: " + level.zombie_vars["zombie_perk_cost"] );
 		break;
@@ -863,6 +1186,10 @@ perk_hud_create( perk )
 
 		case "specialty_rof":
 			shader = "specialty_doubletap_zombies";
+			break;
+
+		case "specialty_extraammo":
+			shader = "specialty_three_guns_zombies";
 			break;
 
 		default:
@@ -931,6 +1258,10 @@ perk_give_bottle_begin( perk )
 	case "specialty_rof":
 		weapon = "zombie_perk_bottle_doubletap";
 		break;
+
+	case "specialty_extraammo":
+		weapon = "zombie_perk_bottle_mule";
+		break;
 	}
 
 	self GiveWeapon( weapon );
@@ -973,6 +1304,10 @@ perk_give_bottle_end( gun, perk )
 
 	case "specialty_rof":
 		weapon = "zombie_perk_bottle_doubletap";
+		break;
+
+	case "specialty_extraammo":
+		weapon = "zombie_perk_bottle_mule";
 		break;
 	}
 
@@ -1182,6 +1517,17 @@ play_vendor_stings(sound)
 			temp_org_pack_s delete();
 //			iprintlnbold("stinger packapunch:"  + level.packa_jingle);
 		}
+		else if(sound == "mx_mule_kick_sting" && level.packa_jingle == 0)
+		{
+			level.packa_jingle = 1;
+//			iprintlnbold("stinger packapunch:" + level.packa_jingle);
+			temp_org_pack_s = spawn("script_origin", self.origin);
+			temp_org_pack_s playsound (sound, "sound_done");
+			temp_org_pack_s waittill("sound_done");
+			level.packa_jingle = 0;
+			temp_org_pack_s delete();
+//			iprintlnbold("stinger packapunch:"  + level.packa_jingle);
+		}
 	}
 }
 
@@ -1247,6 +1593,15 @@ perks_a_cola_jingle()
 				temp_org_jugger delete();
 			}
 			if(self.script_sound == "mx_packa_jingle" && level.packa_jingle == 0)
+			{
+				level.packa_jingle = 1;
+				temp_org_packa = spawn("script_origin", self.origin);
+				temp_org_packa playsound (self.script_sound, "sound_done");
+				temp_org_packa waittill("sound_done");
+				level.packa_jingle = 0;
+				temp_org_packa delete();
+			}
+			if(self.script_sound == "mx_mule_kick_jingle" && level.packa_jingle == 0)
 			{
 				level.packa_jingle = 1;
 				temp_org_packa = spawn("script_origin", self.origin);
