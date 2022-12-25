@@ -108,6 +108,8 @@ init_mulekick(origin, angles)
 
 	trig = Spawn( "trigger_radius", model.origin + ( 0, 0, 30 ), 0, 20, 70 );
 	trig.script_noteworthy = "specialty_extraammo";
+	trig.targetname = "audio_bump_trigger";
+	trig.script_sound = "perks_rattle";
 
 	models = [];
 	models[0] = model;
@@ -175,7 +177,6 @@ watch_guns()
 treasure_chest_give_weapon_func( weapon_string )
 {
 	primaryWeapons = self GetWeaponsListPrimaries();
-	current_weapon = undefined;
 
 	if( self HasWeapon( weapon_string ) )
 	{
@@ -188,11 +189,11 @@ treasure_chest_give_weapon_func( weapon_string )
 	if (self hasperk("specialty_extraammo"))
 		count++;
 
+	current_weapon = self getCurrentWeapon(); // get hiss current weapon
+
 	// This should never be true for the first time.
 	if( primaryWeapons.size >= count ) // he has two weapons
 	{
-		current_weapon = self getCurrentWeapon(); // get hiss current weapon
-
 		if ( current_weapon == "mine_bouncing_betty" )
 		{
 			current_weapon = undefined;
@@ -833,7 +834,9 @@ vending_trigger_think()
 	self SetHintString( &"ZOMBIE_FLAMES_UNAVAILABLE" );
 
 	self SetCursorHint( "HINT_NOICON" );
-	self UseTriggerRequireLookAt();
+
+	if (self.classname == "trigger_use")
+		self UseTriggerRequireLookAt();
 
 	notify_name = perk + "_power_on";
 	level waittill( notify_name );
@@ -844,6 +847,8 @@ vending_trigger_think()
 	self thread check_player_has_perk(perk);
 
 	self vending_set_hintstring(perk);
+
+	last_time = GetTime();
 
 	for( ;; )
 	{
@@ -895,13 +900,16 @@ vending_trigger_think()
 
 		if( player isThrowingGrenade() )
 		{
-			wait( 0.1 );
 			continue;
 		}
 
 		if( player isSwitchingWeapons() )
 		{
-			wait(0.1);
+			continue;
+		}
+
+		if( player GetCurrentWeapon() == "mine_bouncing_betty" )
+		{
 			continue;
 		}
 
@@ -919,7 +927,12 @@ vending_trigger_think()
 			if ( cheat != true )
 			{
 				//player iprintln( "Already using Perk: " + perk );
-				playsoundatposition("deny", self.origin);
+
+				if (self.classname == "trigger_use" || GetTime() - last_time > 500)
+				{
+					last_time = GetTime();
+					playsoundatposition("deny", self.origin);
+				}
 				//player thread play_no_money_perk_dialog();
 
 
@@ -930,7 +943,12 @@ vending_trigger_think()
 		if ( player.score < cost )
 		{
 			//player iprintln( "Not enough points to buy Perk: " + perk );
-			playsoundatposition("deny", self.origin);
+			if (self.classname == "trigger_use" || GetTime() - last_time > 500)
+			{
+				last_time = GetTime();
+				playsoundatposition("deny", self.origin);
+			}
+
 			player thread play_no_money_perk_dialog();
 			continue;
 		}
