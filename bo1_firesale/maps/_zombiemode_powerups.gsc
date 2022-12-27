@@ -7,6 +7,7 @@ init()
 
 	PrecacheShader( "specialty_doublepoints_zombies" );
 	PrecacheShader( "specialty_instakill_zombies" );
+	PrecacheShader( "specialty_firesale_zombies");
 
 
 
@@ -23,6 +24,8 @@ init()
 	set_zombie_var( "zombie_powerup_insta_kill_time", 	30 );	// length of insta kill
 	set_zombie_var( "zombie_powerup_drop_increment", 	2000 );	// lower this to make drop happen more often
 	set_zombie_var( "zombie_powerup_drop_max_per_round", 4 );	// lower this to make drop happen more often
+	set_zombie_var( "zombie_powerup_fire_sale_on", 	false );
+	set_zombie_var( "zombie_powerup_fire_sale_time", 30 );
 
 	// powerups
 	level._effect["powerup_on"] 				= loadfx( "misc/fx_zombie_powerup_on" );
@@ -32,6 +35,22 @@ init()
 	init_powerups();
 
 	thread watch_for_drop();
+
+	thread test();
+}
+
+test()
+{
+	wait 10;
+
+	for (i = 0; i < 25; i++)
+	{
+		wait 0.5;
+		level.zombie_vars["zombie_drop_item"] = 1;
+		level.powerup_drop_count = 0;
+		level.zombie_vars["zombie_powerup_drop_max_per_round"] = 999;
+		powerup_drop((130, -400 + i * 50, 0));
+	}
 }
 
 init_powerups()
@@ -45,6 +64,9 @@ init_powerups()
 		level.zombie_special_drop_array = [];
 	}
 
+	// kek
+	include_zombie_powerup("fire_sale");
+
 	// Random Drops
 	add_zombie_powerup( "nuke", 		"zombie_bomb",		&"ZOMBIE_POWERUP_NUKE", 			"misc/fx_zombie_mini_nuke" );
 //	add_zombie_powerup( "nuke", 		"zombie_bomb",		&"ZOMBIE_POWERUP_NUKE", 			"misc/fx_zombie_mini_nuke_hotness" );
@@ -52,6 +74,7 @@ init_powerups()
 	add_zombie_powerup( "double_points","zombie_x2_icon",	&"ZOMBIE_POWERUP_DOUBLE_POINTS" );
 	add_zombie_powerup( "full_ammo",  	"zombie_ammocan",	&"ZOMBIE_POWERUP_MAX_AMMO");
 	add_zombie_powerup( "carpenter",  	"zombie_carpenter",	&"ZOMBIE_POWERUP_MAX_AMMO");
+	add_zombie_powerup( "fire_sale",  	"zombie_firesale",	&"ZOMBIE_POWERUP_MAX_AMMO" );
 
 	//	add_zombie_special_powerup( "monkey" );
 
@@ -74,13 +97,14 @@ powerup_hud_overlay()
 	level.powerup_hud_array = [];
 	level.powerup_hud_array[0] = true;
 	level.powerup_hud_array[1] = true;
+	level.powerup_hud_array[2] = true;
 
 	level.powerup_hud = [];
 	level.powerup_hud_cover = [];
 	level endon ("disconnect");
 
 
-	for(i = 0; i < 2; i++)
+	for(i = 0; i < 3; i++)
 	{
 		level.powerup_hud[i] = create_simple_hud();
 		level.powerup_hud[i].foreground = true;
@@ -123,9 +147,15 @@ powerup_hud_overlay()
 
 	//increment = 0;
 
+	level thread Power_up_hud( "specialty_doublepoints_zombies", level.powerup_hud[0], -44, "zombie_powerup_point_doubler_time", "zombie_powerup_point_doubler_on" );
+	level thread Power_up_hud( "specialty_instakill_zombies", level.powerup_hud[1], -04, "zombie_powerup_insta_kill_time", "zombie_powerup_insta_kill_on" );
+	level thread Power_up_hud( "specialty_firesale_zombies", level.powerup_hud[2], 36, "zombie_powerup_fire_sale_time", "zombie_powerup_fire_sale_on" );
+
 
 	while(true)
 	{
+		if (1) break;
+
 		if(level.zombie_vars["zombie_powerup_insta_kill_time"] < 5)
 		{
 			wait(0.1);
@@ -285,6 +315,40 @@ powerup_hud_overlay()
 	//	wait(1);
 	//}
 
+}
+
+Power_up_hud( Shader, PowerUp_Hud, X_Position, PowerUp_timer, PowerUp_Var )
+{
+
+	while(true)
+	{
+		if(level.zombie_vars[PowerUp_timer] < 5)
+		{
+			wait(0.1);
+			PowerUp_Hud.alpha = 0;
+			wait(0.1);
+		}
+		else if(level.zombie_vars[PowerUp_timer] < 10)
+		{
+			wait(0.2);
+			PowerUp_Hud.alpha = 0;
+			wait(0.18);
+
+		}
+
+		if( level.zombie_vars[PowerUp_Var] == true )
+		{
+			PowerUp_Hud.x = X_Position;
+			PowerUp_Hud.alpha = 1;
+			PowerUp_Hud setshader(Shader, 32, 32);
+		}
+		else
+		{
+			PowerUp_Hud.alpha = 0;
+		}
+
+		wait( 0.05 );
+	}
 }
 
 randomize_powerups()
@@ -619,6 +683,7 @@ special_drop_setup()
 	case "insta_kill":
 	case "double_points":
 	case "carpenter":
+	case "fire_sale":
 		break;
 
 	// Limit max ammo drops because it's too powerful
@@ -748,6 +813,10 @@ powerup_grab()
 					case "carpenter":
 						level thread start_carpenter( self.origin );
 						players[i] thread powerup_vo("carpenter");
+						break;
+					case "fire_sale":
+						level thread start_fire_sale( self );
+						players[i] thread powerup_vo("firesale");
 						break;
 
 					default:
@@ -1107,6 +1176,63 @@ nuke_flash()
 
 	wait 1.1;
 	fadetowhite destroy();
+}
+
+start_fire_sale( drop_item )
+{
+	level notify ("powerup firesale");
+	level endon ("powerup firesale");
+
+	level thread fire_sale_on_hud( drop_item );
+
+	wait 30;
+}
+
+
+fire_sale_on_hud( drop_item )
+{
+	self endon ("disconnect");
+
+	// check to see if this is on or not
+	if ( level.zombie_vars["zombie_powerup_fire_sale_on"] )
+	{
+		// reset the time and keep going
+		level.zombie_vars["zombie_powerup_fire_sale_time"] = 30;
+		return;
+	}
+
+	level.zombie_vars["zombie_powerup_fire_sale_on"] = true;
+
+	// set time remaining for point doubler
+	level thread time_remaining_on_fire_sale_powerup();
+}
+
+time_remaining_on_fire_sale_powerup()
+{
+	temp_ent = spawn("script_origin", (0,0,0));
+	temp_ent playloopsound ("mus_fire_sale");
+
+	level thread play_devil_dialog("zmb_vox_ann_firesale");
+
+
+	// time it down!
+	while ( level.zombie_vars["zombie_powerup_fire_sale_time"] >= 0)
+	{
+		wait 0.1;
+		level.zombie_vars["zombie_powerup_fire_sale_time"] = level.zombie_vars["zombie_powerup_fire_sale_time"] - 0.1;
+	}
+
+	// turn off the timer
+	level.zombie_vars["zombie_powerup_fire_sale_on"] = false;
+
+	temp_ent stoploopsound(2);
+
+
+	// remove the offset to make room for new powerups, reset timer for next time
+	level.zombie_vars["zombie_powerup_fire_sale_time"] = 30;
+	//level.zombie_timer_offset += level.zombie_timer_offset_interval;
+	//self destroy();
+	temp_ent delete();
 }
 
 // double the points
