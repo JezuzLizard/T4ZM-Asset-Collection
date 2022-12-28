@@ -1,0 +1,17 @@
+fx,aat\fx_blast_furnace_torso
+fx,aat\fx_blast_furnace
+fx,aat\fx_fire_works_muzzle
+fx,aat\fx_fire_works
+fx,aat\fx_thunder_wall
+fx,aat\fx_turned
+sound,aat,,all_sp
+material,blast_furnace_icon
+material,blast_furnace_reticle
+material,dead_wire_icon
+material,dead_wire_reticle
+material,fire_works_icon
+material,fire_works_reticle
+material,thunderwall_icon
+material,thunderwall_reticle
+material,turned_icon
+material,turned_reticle

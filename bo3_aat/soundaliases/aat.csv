@@ -1,0 +1,7 @@
+name,platform,file,sequence,vol_min,vol_max,dist_min,dist_max,limit_count,limit_type,entity_limit_count,entity_limit_type,bus,volume_min_falloff_curve,volumefalloffcurve,reverb_send,dist_reverb_max,reverb_min_falloff_curve,reverb_falloff_curve,pitch_min,pitch_max,randomize_type,spatialized,type,probability,loop,masterslave,loadspec,subtitle,compression,secondaryaliasname,chainaliasname,startdelay,speakermap,lfe percentage,center percentage,envelop_min,envelop_max,envelop percentage,occlusion_level,occlusion_wet_dry,real_delay,distance_lpf,move_type,move_time,min_priority,max_priority,min_priority_threshold,max_priority_threshold,subtitle
+#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+thunderwall_sound,,aat/thunderwall.wav,,1,1,100,800,4,priority,,,full_vol,,curve3,,,,,0.9,1.1,,3d,,,looping,,,,,,,,,,,50,100,1,0.1,,,,,,5,25,0.25,0.75
+fireworks_sound,,aat/fireworks.wav,,1,1,100,800,4,priority,,,full_vol,,curve3,,,,,0.9,1.1,,3d,,,looping,,,,,,,,,,,50,100,1,0.1,,,,,,5,25,0.25,0.75
+blastfurnace_sound,,aat/bgb_burnedout_blast.wav,,1,1,100,800,4,priority,,,full_vol,,curve3,,,,,0.9,1.1,,3d,,,looping,,,,,,,,,,,50,100,1,0.1,,,,,,5,25,0.25,0.75
+turned_sound,,aat/turned_3rd.wav,,0.75,0.75,100,800,4,priority,,,full_vol,,curve3,,,,,0.9,1.1,,3d,,,looping,,,,,,,,,,,50,100,1,0.1,,,,,,5,25,0.25,0.75
+hitmarker_sound,,aat/double_pap_hitmarker.wav,,1,1,1,5000,,,,,full_vol,,,,,,,1,1,,2d,,,,,,,,,,,,,,,,,,,,,,,10,50,0.25,1
