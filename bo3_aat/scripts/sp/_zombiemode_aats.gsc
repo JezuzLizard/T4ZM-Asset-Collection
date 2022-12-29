@@ -97,7 +97,7 @@ callbackActorDamageAat( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, 
 {
 	// check for attacker and inflictor are the same, and are a player, make sure its correct mod type
 	// also make sure zmb isnt already being aat'd and random chance.
-	if ( isDefined( eAttacker ) && isPlayer( eAttacker ) && isDefined( eInflictor ) && eInflictor == eAttacker && ( sMeansOfDeath == "MOD_PISTOL_BULLET" || sMeansOfDeath == "MOD_RIFLE_BULLET" ) && !isDefined( self.marked ) && ( !isDefined( self.magic_bullet_shield ) || !self.magic_bullet_shield ) && eAttacker.aat_fire_time != GetTime() )
+	if ( isDefined( eAttacker ) && isPlayer( eAttacker ) && isDefined( eInflictor ) && eInflictor == eAttacker && ( sMeansOfDeath == "MOD_PISTOL_BULLET" || sMeansOfDeath == "MOD_RIFLE_BULLET" ) && !isDefined( self.marked ) && ( !isDefined( self.magic_bullet_shield ) || !self.magic_bullet_shield ) && eAttacker.aat_fire_time != GetTime() && isAlive( self ) )
 	{
 		eAttacker.aat_fire_time = GetTime();
 
@@ -123,7 +123,7 @@ callbackActorDamageAat( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, 
 	}
 
 	// check for fireworks model!
-	if ( isDefined( eAttacker ) && isDefined( eAttacker.fire_works_owner ) && ( !isDefined( self.magic_bullet_shield ) || !self.magic_bullet_shield ) )
+	if ( isDefined( eAttacker ) && isDefined( eAttacker.fire_works_owner ) && ( !isDefined( self.magic_bullet_shield ) || !self.magic_bullet_shield ) && isAlive( self ) )
 	{
 		self thread gib_and_kill( eAttacker.fire_works_owner );
 		return;
@@ -353,7 +353,7 @@ try_turned( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPo
 	{
 		for ( p = 0; p < playable_area.size; p++ )
 		{
-			if ( self isTouching( playable_area[ p ] ) && isAlive( self ) )
+			if ( self isTouching( playable_area[ p ] ) )
 			{
 				in_playable_area = true;
 				break;
