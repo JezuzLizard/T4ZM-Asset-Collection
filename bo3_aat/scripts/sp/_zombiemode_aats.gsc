@@ -97,7 +97,7 @@ callbackActorDamageAat( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, 
 {
 	// check for attacker and inflictor are the same, and are a player, make sure its correct mod type
 	// also make sure zmb isnt already being aat'd and random chance.
-	if ( isDefined( eAttacker ) && isPlayer( eAttacker ) && isDefined( eInflictor ) && eInflictor == eAttacker && ( sMeansOfDeath == "MOD_PISTOL_BULLET" || sMeansOfDeath == "MOD_RIFLE_BULLET" ) && !isDefined( self.marked ) && ( !isDefined( self.magic_bullet_shield ) || !self.magic_bullet_shield ) && eAttacker.aat_fire_time != GetTime() && isAlive( self ) )
+	if ( isDefined( eAttacker ) && isPlayer( eAttacker ) && isDefined( eInflictor ) && eInflictor == eAttacker && ( sMeansOfDeath == "MOD_PISTOL_BULLET" || sMeansOfDeath == "MOD_RIFLE_BULLET" || sMeansOfDeath == "MOD_HEAD_SHOT" ) && !isDefined( self.marked ) && ( !isDefined( self.magic_bullet_shield ) || !self.magic_bullet_shield ) && eAttacker.aat_fire_time != GetTime() && isAlive( self ) )
 	{
 		eAttacker.aat_fire_time = GetTime();
 
