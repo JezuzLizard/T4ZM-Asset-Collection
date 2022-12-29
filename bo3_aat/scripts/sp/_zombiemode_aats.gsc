@@ -157,6 +157,29 @@ gib_and_kill( player )
 		self doDamage( self.maxHealth + 666, self.origin );
 }
 
+fling_and_kill( vec, player )
+{
+	if ( !self enemy_is_dog() )
+	{
+		self setContents( 0 );
+		self startRagdoll();
+		self launchRagdoll( vec );
+		wait_network_frame();
+	}
+	else
+	{
+		self.a.nodeath = true;
+	}
+
+	if ( !isDefined( self ) )
+		return;
+
+	if ( isDefined( player ) )
+		self doDamage( self.maxHealth + 666, self.origin, player );
+	else
+		self doDamage( self.maxHealth + 666, self.origin );
+}
+
 on_player_connect()
 {
 	for ( ;; )
@@ -623,25 +646,7 @@ turned_fling( player )
 {
 	fling_vec = vectorScale( ( RandomFloatRange( -1, 1 ), RandomFloatRange( -1, 1 ), RandomFloatRange( -1, 1 ) ), RandomFloatRange( 25, 75 ) );
 
-	if ( !self enemy_is_dog() )
-	{
-		self setContents( 0 );
-		self startRagdoll();
-		self launchRagdoll( fling_vec );
-		wait_network_frame();
-	}
-	else
-	{
-		self.a.nodeath = true;
-	}
-
-	if ( !isDefined( self ) )
-		return;
-
-	if ( isDefined( player ) )
-		self doDamage( self.maxHealth + 666, self.origin, player );
-	else
-		self doDamage( self.maxHealth + 666, self.origin );
+	self thread fling_and_kill( fling_vec, player );
 }
 
 turned_area_of_effect( my_guy )
@@ -897,25 +902,7 @@ thunder_wall_fling_and_kill( player )
 	angle = anglesToForward( angle ) + anglesToUp( angle );
 	fling_vec = vectorScale( angle, RandomFloatRange( 150, 250 ) );
 
-	if ( !self enemy_is_dog() )
-	{
-		self setContents( 0 );
-		self startRagdoll();
-		self launchRagdoll( fling_vec );
-		wait_network_frame();
-	}
-	else
-	{
-		self.a.nodeath = true;
-	}
-
-	if ( !isDefined( self ) )
-		return;
-
-	if ( isDefined( player ) )
-		self doDamage( self.maxHealth + 666, self.origin, player );
-	else
-		self doDamage( self.maxHealth + 666, self.origin );
+	self thread fling_and_kill( fling_vec, player );
 }
 
 thunder_wall_area_of_effect( my_guy )
@@ -1004,16 +991,7 @@ try_blastfurnace( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapo
 		return;
 
 	// kill it
-	self thread blast_furnace_death_fx( 0 );
-	self thread blast_furnace_dot( eAttacker ); // failsafe
-
-	// do damage
-	setPlayerIgnoreRadiusDamage( true );
-
-	if ( isDefined( eAttacker ) )
-		eAttacker radiusDamage( self.origin, 5, self.maxhealth + 666, self.maxhealth + 666, eAttacker, sMeansOfDeath );
-
-	setPlayerIgnoreRadiusDamage( false );
+	self thread blast_furnace_death_fx( 0, eAttacker );
 }
 
 blast_furnace_cooldown_timer( time )
@@ -1035,8 +1013,26 @@ blast_furnace_cooldown_timer( time )
 	self.blast_furnace_cooldown_time_remaining = undefined;
 }
 
-blast_furnace_death_fx( arc )
+blast_furnace_death_fx( arc, player )
 {
+	if ( arc == 0 )
+	{
+		tag = "J_MainRoot";
+
+		if ( self enemy_is_dog() )
+			tag = "j_spine4";
+
+		PlayFx( level._effect["dog_gib"], self getTagOrigin( tag ) );
+		self hide();
+
+		if ( isDefined( player ) )
+			self doDamage( self.maxHealth + 666, self.origin, player );
+		else
+			self doDamage( self.maxHealth + 666, self.origin );
+
+		return;
+	}
+
 	joints = [];
 
 	if ( self enemy_is_dog() )
@@ -1084,6 +1080,8 @@ blast_furnace_dot( killer )
 
 		if ( isDefined( killer ) )
 			self doDamage( dmg_amt, self.origin, killer );
+		else
+			self doDamage( dmg_amt, self.origin );
 
 		wait RandomFloatRange( level.zombie_vars["blast_furnace_chain_wait_min"], level.zombie_vars["blast_furnace_chain_wait_max"] );
 	}
@@ -1128,7 +1126,7 @@ blast_furnace_area_of_effect( my_guy )
 		{
 			// kill the dude
 			zombies[ i ].marked = true;
-			zombies[ i ] thread blast_furnace_death_fx( 1 );
+			zombies[ i ] thread blast_furnace_death_fx( 1, self );
 			zombies[ i ] thread blast_furnace_dot( self );
 		}
 
@@ -1158,19 +1156,7 @@ try_deadwire( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, v
 		return;
 
 	// kill it
-	self thread dead_wire_death_fx( 0 );
-
-	// do damage
-	setPlayerIgnoreRadiusDamage( true );
-
-	if ( isDefined( eAttacker ) )
-		eAttacker radiusDamage( self.origin, 5, self.maxhealth + 666, self.maxhealth + 666, eAttacker, sMeansOfDeath );
-
-	setPlayerIgnoreRadiusDamage( false );
-
-	// failsafe
-	if ( isAlive( self ) )
-		self doDamage( self.maxHealth + 666, self.origin );
+	self thread dead_wire_death_fx( 0, eAttacker );
 }
 
 dead_wire_cooldown_timer( time )
@@ -1192,7 +1178,7 @@ dead_wire_cooldown_timer( time )
 	self.dead_wire_cooldown_time_remaining = undefined;
 }
 
-dead_wire_death_fx( arc_num )
+dead_wire_death_fx( arc_num, player )
 {
 	tag = "tag_origin";
 
@@ -1232,6 +1218,11 @@ dead_wire_death_fx( arc_num )
 		else
 			playfxontag( level._effect[ "tesla_shock_eyes" ], self, "j_eyeball_le" );
 	}
+
+	if ( isDefined( player ) )
+		self doDamage( self.maxHealth + 666, self.origin, player );
+	else
+		self doDamage( self.maxHealth + 666, self.origin );
 }
 
 dead_wire_arc_fx( guy, dude )
@@ -1245,7 +1236,7 @@ dead_wire_arc_fx( guy, dude )
 
 	to = dude.origin;
 
-	if ( guy enemy_is_dog() )
+	if ( dude enemy_is_dog() )
 		to = dude GetTagOrigin( "J_Spine1" );
 	else
 		to = dude GetTagOrigin( "j_spineupper" );
@@ -1267,10 +1258,7 @@ dead_wire_arc_fx( guy, dude )
 		return;
 
 	// kill him
-	dude thread dead_wire_death_fx( 1 );
-
-	if ( isDefined( self ) )
-		dude doDamage( dude.maxHealth + 666, dude.origin, self );
+	dude thread dead_wire_death_fx( 1, self );
 }
 
 dead_wire_area_of_effect( my_guy )
