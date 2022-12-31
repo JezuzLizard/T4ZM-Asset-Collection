@@ -76,9 +76,13 @@ servant_explode( point, up )
 
 	wait ( time );
 	soundemitter stoploopsound();
-	soundemitter delete ();
 
-	PlayFX( level._effect["servant_implode"], point );
+	PlayFXOnTag( level._effect["servant_implode"], soundemitter, "tag_origin" );
+	soundemitter playsound( "servant_portal_end" );
+	earthquake( .4, .6, org, 750 );
+
+	wait 4;
+	soundemitter delete ();
 }
 
 servant_portal( time, player, up )
@@ -100,10 +104,13 @@ servant_portal( time, player, up )
 		{
 			for ( i = 0; i < zombies.size; i++ )
 			{
-				if ( !isDefined( zombies[i] ) )
+				if ( !isDefined( zombies[i] ) || !isAlive( zombies[i] ) )
 					continue;
 
 				if ( isDefined( zombies[i].magic_bullet_shield ) && zombies[i].magic_bullet_shield )
+					continue;
+
+				if ( isDefined( zombies[i].marked ) && zombies[i].marked )
 					continue;
 
 				if ( !isDefined( zombies[i].in_servant ) || !zombies[i].in_servant )
@@ -118,8 +125,6 @@ servant_portal( time, player, up )
 		time = time - 0.1;
 	}
 
-	playsoundatposition( "servant_portal_end", org );
-	earthquake( .4, .6, org, 750 );
 
 
 	radius = level.zombie_vars[ "servant_radius_explode" ];
@@ -137,6 +142,9 @@ servant_portal( time, player, up )
 		if ( isDefined( zombies[i].magic_bullet_shield ) && zombies[i].magic_bullet_shield )
 			continue;
 
+		if ( isDefined( zombies[i].marked ) && zombies[i].marked )
+			continue;
+
 		zombies[i] maps\_zombiemode_spawner::zombie_eye_glow_stop();
 		zombies[i] hide();
 
@@ -151,7 +159,7 @@ servant_portal( time, player, up )
 
 servant_damage( player, portal )
 {
-	wait (RandomInt(5) * 0.05);
+	wait ( RandomInt( 21 ) * 0.05 );
 
 	if ( !isDefined( self ) || !isAlive( self ) )
 		return;
@@ -195,13 +203,13 @@ servant_damage( player, portal )
 	zombie setanim( servant_anim );
 
 	zombie MoveTo( portal.origin, 1 );
-	//zombie RotateRoll( (2 * 1500 + 3 * Randomfloat( 2500 )) * -1, 5, 0, 0 );
-
-	if ( !isDefined( zombie ) )
-		return;
 
 	zombie waittill( "movedone" );
-	playsoundatposition( "crush_end_0" + randomint( 2 ), zombie.origin );
-	playfx( level._effect["dog_gib"], zombie.origin );
+	zombie hide();
+
+	zombie playSound( "crush_end_0" + randomint( 2 ) );
+	playFxOnTag( level._effect["dog_gib"], zombie, "tag_origin" );
+
+	wait 2;
 	zombie delete ();
 }

@@ -408,7 +408,7 @@ kicked_death( killer )
 		self.shrinkTrigger Delete();
 	}
 
-	self thread kicked_sound();
+	self thread kicked_sound( "zmb_mini_kicked0", 4, 2 );
 
 	kickAngles = killer.angles;
 	kickAngles += ( RandomFloatRange( -30, -20 ), RandomFloatRange( -5, 5 ), 0 ); //pitch up the angle
@@ -440,7 +440,7 @@ kicked_vox_network_choke()
 	}
 }
 
-kicked_sound()
+kicked_sound( snd, num, tim )
 {
 	if ( !IsDefined( level._num_kicked_vox ) )
 		level thread kicked_vox_network_choke();
@@ -450,7 +450,11 @@ kicked_sound()
 
 	level._num_kicked_vox++;
 
-	playsoundatposition( "zmb_mini_kicked0" + randomint( 4 ), self.origin );
+	soundemitter = Spawn( "script_model", self.origin );
+	soundemitter setmodel( "tag_origin" );
+	soundemitter playSound( snd + randomint( num ) );
+	wait tim;
+	soundemitter delete ();
 }
 
 shrink_death( killer )
@@ -458,7 +462,7 @@ shrink_death( killer )
 	if ( isDefined( self.shrinkTrigger ) )
 		self.shrinkTrigger Delete();
 
-	playsoundatposition( "zmb_mini_squashed0" + randomint( 4 ), self.origin );
+	self thread kicked_sound( "zmb_mini_squashed0", 4, 2 );
 
 	self setContents( 0 );
 	self thread maps\_zombiemode_spawner::zombie_eye_glow_stop();
@@ -468,6 +472,7 @@ shrink_death( killer )
 		return;
 
 	self Hide();
+	playfx( level._effect["dog_gib"], self.origin );
 
 	if ( isDefined( killer ) )
 		self dodamage( self.health + 666, self.origin, killer );

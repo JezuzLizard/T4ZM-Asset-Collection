@@ -414,6 +414,9 @@ turned_zmb()
 		var = randomintrange( 1, 4 );
 		self set_run_anim( "sprint" + var );
 		self.run_combatanim = level.scr_anim[ self.animname ][ "sprint" + var ];
+
+		if ( isDefined( level.scr_anim["zombie"]["mega_sprint1"] ) )
+			self set_run_anim( "mega_sprint1" );
 	}
 
 	self setCanDamage( false );
@@ -582,7 +585,7 @@ turned_timeout( player )
 	if ( !self enemy_is_dog() )
 	{
 		playFx( level._effect["dog_gib"], self GetCentroid() );
-		playsoundatposition( "zombie_head_gib", self.origin );
+		self playSound( "zombie_head_gib" );
 	}
 
 	self thread gib_and_kill( player );
@@ -786,7 +789,7 @@ fire_works_area_of_effect( my_guy )
 	model.fire_works_owner = self;
 
 	origin = playerPhysicsTrace( target_origin, target_origin + ( 0, 0, -1000 ) );
-	fxObj = spawn( "script_model", origin );
+	fxObj = spawn( "script_origin", origin );
 	fxObj setModel( "tag_origin" );
 	fxObj.angles = ( 270, 0, 0 );
 
@@ -880,14 +883,14 @@ thunder_wall_fx( player )
 	else
 		origin = self GetTagOrigin( "j_spineupper" );
 
-	fxOrg = Spawn( "script_model", origin );
+	fxOrg = Spawn( "script_origin", origin );
 	fxOrg SetModel( "tag_origin" );
 	fxOrg.angles = player.angles;
 
 	playFxOnTag( level._effect[ "fx_thunder_wall" ], fxOrg, "tag_origin" );
-	playsoundatposition( "thunderwall_sound", fxOrg.origin );
+	fxOrg playsound( "thunderwall_sound" );
 
-	wait 2;
+	wait 2.5;
 	fxOrg delete ();
 }
 
@@ -980,8 +983,7 @@ try_blastfurnace( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapo
 	eAttacker thread double_pap_show_hitmarker( "blast_furnace_reticle" );
 
 	// kill others
-	playsoundatposition( "blastfurnace_sound", self.origin );
-	playFx( level._effect[ "fx_blast_furnace" ], self.origin );
+	self thread blast_furnace_fx();
 
 	eAttacker thread blast_furnace_area_of_effect( self );
 
@@ -992,6 +994,25 @@ try_blastfurnace( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapo
 
 	// kill it
 	self thread blast_furnace_death_fx( 0, eAttacker );
+}
+
+blast_furnace_fx()
+{
+	origin = self.origin;
+
+	if ( self enemy_is_dog() )
+		origin = self GetTagOrigin( "J_Spine1" );
+	else
+		origin = self GetTagOrigin( "j_spineupper" );
+
+	fxOrg = Spawn( "script_origin", origin );
+	fxOrg SetModel( "tag_origin" );
+
+	playFxOnTag( level._effect[ "fx_blast_furnace" ], fxOrg, "tag_origin" );
+	fxOrg playsound( "blastfurnace_sound" );
+
+	wait 3;
+	fxOrg delete ();
 }
 
 blast_furnace_cooldown_timer( time )
@@ -1243,22 +1264,21 @@ dead_wire_arc_fx( guy, dude )
 
 
 	// play bounce fx
-	fxOrg = Spawn( "script_model", from );
+	fxOrg = Spawn( "script_origin", from );
 
 	fxOrg SetModel( "tag_origin" );
 
 	playFxOnTag( level._effect[ "tesla_bolt" ], fxOrg, "tag_origin" );
-	playsoundatposition( "tesla_bounce", fxOrg.origin );
+	fxOrg playSound( "tesla_bounce" );
 
 	fxOrg MoveTo( to, RandomFloatRange( level.zombie_vars["dead_wire_chain_wait_min"], level.zombie_vars["dead_wire_chain_wait_max"] ) );
 	fxOrg waittill( "movedone" );
+
+	if ( isDefined( dude ) )
+		dude thread dead_wire_death_fx( 1, self );
+
+	wait 2;
 	fxOrg delete ();
-
-	if ( !isDefined( dude ) )
-		return;
-
-	// kill him
-	dude thread dead_wire_death_fx( 1, self );
 }
 
 dead_wire_area_of_effect( my_guy )
