@@ -76,6 +76,10 @@ servant_explode( point, up )
 
 	wait ( time );
 	soundemitter stoploopsound();
+	soundemitter delete ();
+
+	soundemitter = Spawn( "script_model", point );
+	soundemitter setmodel( "tag_origin" );
 
 	PlayFXOnTag( level._effect["servant_implode"], soundemitter, "tag_origin" );
 	soundemitter playsound( "servant_portal_end" );
@@ -159,6 +163,8 @@ servant_portal( time, player, up )
 
 servant_damage( player, portal )
 {
+	to = portal.origin;
+
 	wait ( RandomInt( 21 ) * 0.05 );
 
 	if ( !isDefined( self ) || !isAlive( self ) )
@@ -202,7 +208,7 @@ servant_damage( player, portal )
 	zombie UseAnimTree( #animtree );
 	zombie setanim( servant_anim );
 
-	zombie MoveTo( portal.origin, 1 );
+	zombie MoveTo( to, 1 );
 
 	zombie waittill( "movedone" );
 	zombie hide();
