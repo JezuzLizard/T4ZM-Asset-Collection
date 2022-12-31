@@ -79,7 +79,7 @@ servant_explode( point, up )
 
 	PlayFXOnTag( level._effect["servant_implode"], soundemitter, "tag_origin" );
 	soundemitter playsound( "servant_portal_end" );
-	earthquake( .4, .6, org, 750 );
+	earthquake( .4, .6, point, 750 );
 
 	wait 4;
 	soundemitter delete ();
