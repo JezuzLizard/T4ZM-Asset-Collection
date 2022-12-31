@@ -216,6 +216,6 @@ servant_damage( player, portal )
 	zombie playSound( "crush_end_0" + randomint( 2 ) );
 	playFxOnTag( level._effect["dog_gib"], zombie, "tag_origin" );
 
-	wait 2;
+	wait 4;
 	zombie delete ();
 }
